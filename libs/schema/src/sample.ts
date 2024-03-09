@@ -200,6 +200,10 @@ export const sampleResume: ResumeData = {
             label: "",
             href: "",
           },
+          url2: {
+            label: "",
+            href: "",
+          },
         },
         {
           id: "ncxgdjjky54gh59iz2t1xi1v",
@@ -211,6 +215,10 @@ export const sampleResume: ResumeData = {
             "<p>Created an interactive analytics dashboard for a SaaS application, enhancing data visualization for clients.</p>",
           keywords: [],
           url: {
+            label: "",
+            href: "",
+          },
+          url2: {
             label: "",
             href: "",
           },

@@ -123,13 +123,14 @@ type LinkProps = {
   icon?: React.ReactNode;
   label?: string;
   className?: string;
+  inline?: boolean;
 };
 
-const Link = ({ url, icon, label, className }: LinkProps) => {
+const Link = ({ url, icon, label, className, inline = false }: LinkProps) => {
   if (!isUrl(url.href)) return null;
 
   return (
-    <div className="flex items-center gap-x-1.5">
+    <div className={cn("items-center gap-x-1.5", inline ? "inline-flex" : "flex")}>
       {icon ?? <i className="ph ph-bold ph-link text-primary group-[.sidebar]:text-primary" />}
       <a
         href={url.href}
@@ -151,6 +152,7 @@ type SectionProps<T> = {
   levelKey?: keyof T;
   summaryKey?: keyof T;
   keywordsKey?: keyof T;
+  showLinks?: boolean;
 };
 
 const Section = <T,>({
@@ -161,6 +163,7 @@ const Section = <T,>({
   levelKey,
   summaryKey,
   keywordsKey,
+  showLinks = true,
 }: SectionProps<T>) => {
   if (!section.visible || !section.items.length) return null;
 
@@ -178,6 +181,7 @@ const Section = <T,>({
           .filter((item) => item.visible)
           .map((item) => {
             const url = (urlKey && get(item, urlKey)) as URL | undefined;
+            const url2 = get(item, "url2") as URL | undefined;
             const level = (levelKey && get(item, levelKey, 0)) as number | undefined;
             const summary = (summaryKey && get(item, summaryKey, "")) as string | undefined;
             const keywords = (keywordsKey && get(item, keywordsKey, [])) as string[] | undefined;
@@ -186,7 +190,12 @@ const Section = <T,>({
               <div key={item.id} className={cn("space-y-2", className)}>
                 <div>
                   {children?.(item as T)}
-                  {url !== undefined && <Link url={url} />}
+                  {showLinks && (
+                    <span className="flex gap-4">
+                      {url !== undefined && <Link url={url} inline />}
+                      {url2 !== undefined && <Link url={url2} inline />}
+                    </span>
+                  )}
                 </div>
 
                 {summary !== undefined && !isEmptyString(summary) && (
@@ -412,19 +421,33 @@ const Projects = () => {
   const section = useArtboardStore((state) => state.resume.sections.projects);
 
   return (
-    <Section<Project> section={section} urlKey="url" summaryKey="summary" keywordsKey="keywords">
-      {(item) => (
-        <div className="flex items-start justify-between group-[.sidebar]:flex-col group-[.sidebar]:items-start">
-          <div className="text-left">
-            <div className="font-bold">{item.name}</div>
-            <div>{item.description}</div>
-          </div>
+    <Section<Project>
+      section={section}
+      urlKey="url"
+      summaryKey="summary"
+      keywordsKey="keywords"
+      showLinks={false}
+    >
+      {(item) => {
+        const url = get(item, "url") as URL | undefined;
+        const url2 = get(item, "url2") as URL | undefined;
 
-          <div className="shrink-0 text-right">
-            <div className="font-bold">{item.date}</div>
+        return (
+          <div className="flex items-start justify-between group-[.sidebar]:flex-col group-[.sidebar]:items-start">
+            <div className="flex items-baseline gap-6 text-left">
+              <div className="inline font-bold">{item.name}</div>
+              <span className="inline-flex gap-4">
+                {url !== undefined && <Link url={url} inline />}
+                {url2 !== undefined && <Link url={url2} inline />}
+              </span>
+            </div>
+
+            <div className="shrink-0 text-right">
+              <div className="font-bold">{item.date}</div>
+            </div>
           </div>
-        </div>
-      )}
+        );
+      }}
     </Section>
   );
 };

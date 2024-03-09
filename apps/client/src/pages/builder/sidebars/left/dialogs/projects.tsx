@@ -101,6 +101,26 @@ export const ProjectsDialog = () => {
         />
 
         <FormField
+          name="url2"
+          control={form.control}
+          render={({ field }) => {
+            field.value = (field.value ?? { label: "", href: "" }) as {
+              label: string;
+              href: string;
+            };
+            return (
+              <FormItem>
+                <FormLabel>{t`Website`}</FormLabel>
+                <FormControl>
+                  <URLInput {...field} placeholder="https://rxresu.me" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            );
+          }}
+        />
+
+        <FormField
           name="summary"
           control={form.control}
           render={({ field }) => (

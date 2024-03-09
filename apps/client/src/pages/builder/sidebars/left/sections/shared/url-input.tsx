@@ -13,7 +13,7 @@ import { forwardRef, useMemo } from "react";
 
 interface Props {
   id?: string;
-  value: URL;
+  value: URL | undefined;
   placeholder?: string;
   onChange: (value: URL) => void;
 }
@@ -28,11 +28,11 @@ export const URLInput = forwardRef<HTMLInputElement, Props>(
           <Input
             id={id}
             ref={ref}
-            value={value.href}
+            value={value?.href}
             className="flex-1"
             hasError={hasError}
             placeholder={placeholder}
-            onChange={(event) => onChange({ ...value, href: event.target.value })}
+            onChange={(event) => onChange({ ...value!, href: event.target.value })}
           />
 
           <Popover>
@@ -45,9 +45,9 @@ export const URLInput = forwardRef<HTMLInputElement, Props>(
             </Tooltip>
             <PopoverContent className="p-1.5">
               <Input
-                value={value.label}
+                value={value?.label}
                 placeholder={t`Label`}
-                onChange={(event) => onChange({ ...value, label: event.target.value })}
+                onChange={(event) => onChange({ ...value!, label: event.target.value })}
               />
             </PopoverContent>
           </Popover>

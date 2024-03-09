@@ -10,6 +10,7 @@ export const projectSchema = itemSchema.extend({
   summary: z.string(),
   keywords: z.array(z.string()).default([]),
   url: urlSchema,
+  url2: urlSchema.optional(),
 });
 
 // Type
@@ -24,4 +25,5 @@ export const defaultProject: Project = {
   summary: "",
   keywords: [],
   url: defaultUrl,
+  // url2: defaultUrl,
 };
