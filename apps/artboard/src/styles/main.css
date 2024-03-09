@@ -16,7 +16,7 @@
   @apply hidden;
 }
 
-#root.underline-links a {
+a {
   @apply underline underline-offset-2;
 }
 
