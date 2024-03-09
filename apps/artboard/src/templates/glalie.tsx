@@ -45,7 +45,7 @@ const Header = () => {
           <div className="text-base">{basics.headline}</div>
         </div>
 
-        <div className="flex flex-col items-start gap-y-1.5 rounded border border-primary px-3 py-4 text-left text-sm">
+        <div className="flex flex-col items-start gap-y-1.5 rounded-xl border border-primary px-3 py-4 text-left text-sm">
           {basics.location && (
             <div className="flex items-center gap-x-1.5">
               <i className="ph ph-bold ph-map-pin text-primary" />
@@ -241,7 +241,7 @@ const Education = () => {
             <div>{item.score}</div>
           </div>
 
-          <div className="shrink-0 text-right">
+          <div className="shrink-0">
             <div className="font-bold">{item.date}</div>
             <div>{item.studyType}</div>
           </div>
