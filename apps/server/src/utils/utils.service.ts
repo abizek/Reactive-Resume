@@ -48,9 +48,9 @@ export class UtilsService {
     }
 
     // If the value is in the cache, return it
-    if (cachedValue) {
-      return (type === "string" ? cachedValue : JSON.parse(cachedValue)) as T;
-    }
+    // if (cachedValue) {
+    //   return (type === "string" ? cachedValue : JSON.parse(cachedValue)) as T;
+    // }
 
     // If the value is not in the cache, run the callback
     const value = await callback();
