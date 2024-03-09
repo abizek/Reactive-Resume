@@ -17,7 +17,14 @@ import {
   URL,
   Volunteer,
 } from "@reactive-resume/schema";
-import { cn, hexToRgb, isEmptyString, isUrl, linearTransform } from "@reactive-resume/utils";
+import {
+  cn,
+  getHuefromHex,
+  hexToRgb,
+  isEmptyString,
+  isUrl,
+  linearTransform,
+} from "@reactive-resume/utils";
 import get from "lodash.get";
 import { Fragment } from "react";
 
@@ -508,7 +515,10 @@ export const Glalie = ({ columns, isFirstPage = false }: TemplateProps) => {
     <div className="grid min-h-[inherit] grid-cols-3">
       <div
         className="sidebar p-custom group space-y-4"
-        style={{ backgroundColor: hexToRgb(primaryColor, 0.2) }}
+        style={{
+          backgroundColor: hexToRgb(primaryColor, 0.025),
+          color: `hsl(${getHuefromHex(primaryColor)}, 90%, 10%)`,
+        }}
       >
         {isFirstPage && <Header />}
 
