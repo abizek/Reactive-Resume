@@ -16,7 +16,7 @@ import {
   URL,
   Volunteer,
 } from "@reactive-resume/schema";
-import { cn, hexToRgb, isEmptyString, isUrl } from "@reactive-resume/utils";
+import { cn, isEmptyString, isUrl } from "@reactive-resume/utils";
 import get from "lodash.get";
 import React, { Fragment } from "react";
 
@@ -28,19 +28,15 @@ const Header = () => {
   const basics = useArtboardStore((state) => state.resume.basics);
   const section = useArtboardStore((state) => state.resume.sections.summary);
   const profiles = useArtboardStore((state) => state.resume.sections.profiles);
-  const primaryColor = useArtboardStore((state) => state.resume.metadata.theme.primary);
   const fontSize = useArtboardStore((state) => state.resume.metadata.typography.font.size);
 
   return (
     <div>
-      <div
-        className="p-custom flex items-center space-x-8"
-        style={{ backgroundColor: hexToRgb(primaryColor, 0.2) }}
-      >
+      <div className="p-custom flex items-center space-x-8 pb-2">
         <div className="space-y-3">
           <div>
-            <div className="text-3xl font-bold">{basics.name}</div>
-            <div className="text-base font-medium text-primary">{basics.headline}</div>
+            <div className="text-6xl font-bold tracking-tighter">{basics.name}</div>
+            <div className="text-xl font-medium text-primary">{basics.headline}</div>
           </div>
 
           <div
@@ -53,8 +49,8 @@ const Header = () => {
         <Picture />
       </div>
 
-      <div className="p-custom space-y-3" style={{ backgroundColor: hexToRgb(primaryColor, 0.4) }}>
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-sm">
+      <div className="p-custom space-y-3 py-0">
+        <div className="flex flex-wrap items-center gap-x-8 gap-y-0.5 text-sm">
           {basics.location && (
             <div className="flex items-center gap-x-1.5">
               <i className="ph ph-bold ph-map-pin text-primary" />
@@ -84,32 +80,32 @@ const Header = () => {
               <span>{[item.name, item.value].filter(Boolean).join(": ")}</span>
             </div>
           ))}
-        </div>
 
-        {profiles.visible && profiles.items.length > 0 && (
-          <div className="flex items-center gap-x-3 gap-y-0.5">
-            {profiles.items
-              .filter((item) => item.visible)
-              .map((item) => (
-                <div key={item.id} className="flex items-center gap-x-2">
-                  <Link
-                    url={item.url}
-                    label={item.username}
-                    className="text-sm"
-                    icon={
-                      <img
-                        className="ph"
-                        width={fontSize}
-                        height={fontSize}
-                        alt={item.network}
-                        src={`https://cdn.simpleicons.org/${item.icon}`}
-                      />
-                    }
-                  />
-                </div>
-              ))}
-          </div>
-        )}
+          {profiles.visible && profiles.items.length > 0 && (
+            <div className="flex items-center gap-x-8 gap-y-0.5">
+              {profiles.items
+                .filter((item) => item.visible)
+                .map((item) => (
+                  <div key={item.id} className="flex items-center gap-x-2">
+                    <Link
+                      url={item.url}
+                      label={item.username}
+                      className="text-sm"
+                      icon={
+                        <img
+                          className="ph"
+                          width={fontSize}
+                          height={fontSize}
+                          alt={item.network}
+                          src={`https://cdn.simpleicons.org/${item.icon}`}
+                        />
+                      }
+                    />
+                  </div>
+                ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -167,7 +163,6 @@ const Section = <T,>({
   section,
   children,
   className,
-  urlKey,
   levelKey,
   summaryKey,
   keywordsKey,
@@ -176,18 +171,15 @@ const Section = <T,>({
 
   return (
     <section id={section.id} className="grid">
-      <h4 className="mb-2 border-b border-primary text-left font-bold text-primary">
-        {section.name}
-      </h4>
+      <h4 className="mb-1 text-left text-xl tracking-tight text-primary">{section.name}</h4>
 
       <div
-        className="grid gap-x-6 gap-y-3"
+        className={cn("grid gap-x-6 gap-y-2", className)}
         style={{ gridTemplateColumns: `repeat(${section.columns}, 1fr)` }}
       >
         {section.items
           .filter((item) => item.visible)
           .map((item) => {
-            const url = (urlKey && get(item, urlKey)) as URL | undefined;
             const level = (levelKey && get(item, levelKey, 0)) as number | undefined;
             const summary = (summaryKey && get(item, summaryKey, "")) as string | undefined;
             const keywords = (keywordsKey && get(item, keywordsKey, [])) as string[] | undefined;
@@ -205,8 +197,6 @@ const Section = <T,>({
                 {keywords !== undefined && keywords.length > 0 && (
                   <p className="text-sm">{keywords.join(", ")}</p>
                 )}
-
-                {url !== undefined && <Link url={url} />}
               </div>
             );
           })}
@@ -222,10 +212,15 @@ const Experience = () => {
     <Section<Experience> section={section} urlKey="url" summaryKey="summary">
       {(item) => (
         <div>
-          <div className="font-bold">{item.company}</div>
-          <div>{item.position}</div>
-          <div>{item.location}</div>
-          <div className="font-bold">{item.date}</div>
+          <div className="flex items-baseline justify-between">
+            <div className="font-bold text-primary">{item.position}</div>
+            <div className="text-xs">{item.date}</div>
+          </div>
+          <div className="flex justify-between">
+            <div className="font-bold text-primary">{item.company}</div>
+            <div className="text-xs">{item.location}</div>
+          </div>
+          <Link url={item.url} />
         </div>
       )}
     </Section>
@@ -239,11 +234,14 @@ const Education = () => {
     <Section<Education> section={section} urlKey="url" summaryKey="summary">
       {(item) => (
         <div>
-          <div className="font-bold">{item.institution}</div>
+          <div>{item.studyType}</div>
+          <div className="flex justify-between">
+            <div className="font-bold">{item.institution}</div>
+            <div className="font-bold">{item.date}</div>
+          </div>
+          <Link url={item.url} icon="" />
           <div>{item.area}</div>
           <div>{item.score}</div>
-          <div>{item.studyType}</div>
-          <div className="font-bold">{item.date}</div>
         </div>
       )}
     </Section>
@@ -289,7 +287,7 @@ const Skills = () => {
     <Section<Skill> section={section} levelKey="level" keywordsKey="keywords">
       {(item) => (
         <div>
-          <div className="font-bold">{item.name}</div>
+          <div className="font-bold text-primary">{item.name}</div>
           <div>{item.description}</div>
         </div>
       )}
@@ -344,11 +342,10 @@ const Languages = () => {
   const section = useArtboardStore((state) => state.resume.sections.languages);
 
   return (
-    <Section<Language> section={section} levelKey="level">
+    <Section<Language> section={section} levelKey="level" className="gap-y-0">
       {(item) => (
         <div>
-          <div className="font-bold">{item.name}</div>
-          <div>{item.description}</div>
+          {item.name} · {item.description}
         </div>
       )}
     </Section>
@@ -357,15 +354,35 @@ const Languages = () => {
 
 const Projects = () => {
   const section = useArtboardStore((state) => state.resume.sections.projects);
+  const fontSize = useArtboardStore((state) => state.resume.metadata.typography.font.size);
 
   return (
     <Section<Project> section={section} urlKey="url" summaryKey="summary" keywordsKey="keywords">
       {(item) => (
         <div>
           <div>
-            <div className="font-bold">{item.name}</div>
+            <div className="flex justify-between">
+              <div className="font-bold text-primary">{item.name}</div>
+              <div className="flex gap-4 pr-1">
+                <Link url={item.url} />
+                {item.url2 && (
+                  <Link
+                    url={item.url2}
+                    icon={
+                      <img
+                        className="ph"
+                        alt="View GitHub"
+                        width={fontSize}
+                        height={fontSize}
+                        src="https://cdn.simpleicons.org/GitHub"
+                      />
+                    }
+                  />
+                )}
+              </div>
+            </div>
             <div>{item.description}</div>
-            <div className="font-bold">{item.date}</div>
+            <div className="font-bold text-primary">{item.date}</div>
           </div>
         </div>
       )}
@@ -462,7 +479,7 @@ export const Leafish = ({ columns, isFirstPage = false }: TemplateProps) => {
     <div>
       {isFirstPage && <Header />}
 
-      <div className="p-custom grid grid-cols-2 items-start space-x-6">
+      <div className="p-custom grid grid-cols-[6fr_4fr] items-start gap-x-4 space-x-6">
         <div className="grid gap-y-4">
           {main.map((section) => (
             <Fragment key={section}>{mapSectionToComponent(section)}</Fragment>
