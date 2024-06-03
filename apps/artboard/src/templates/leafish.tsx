@@ -217,10 +217,17 @@ const Experience = () => {
             <div className="text-xs">{item.date}</div>
           </div>
           <div className="flex justify-between">
-            <div className="font-bold text-primary">{item.company}</div>
+            <div className="font-bold text-primary">
+              {item.url.href ? (
+                <a href={item.url.href} target="_blank" rel="noreferrer noopener nofollow">
+                  {item.company}
+                </a>
+              ) : (
+                item.company
+              )}
+            </div>
             <div className="text-xs">{item.location}</div>
           </div>
-          <Link url={item.url} />
         </div>
       )}
     </Section>
