@@ -11,7 +11,11 @@ export const Providers = () => {
     const handleMessage = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) return;
 
-      if (event.data.type === "SET_RESUME") setResume(event.data.payload);
+      if (event.data.type === "SET_RESUME") {
+        setResume(event.data.payload);
+        window.localStorage.setItem("resume", JSON.stringify(event.data.payload));
+      }
+
       if (event.data.type === "SET_THEME") {
         event.data.payload === "dark"
           ? document.documentElement.classList.add("dark")
