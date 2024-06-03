@@ -171,7 +171,7 @@ const Section = <T,>({
 
   return (
     <section id={section.id} className="grid">
-      <h4 className="mb-1 text-left text-xl tracking-tight text-primary">{section.name}</h4>
+      <h4 className="mb-2 text-left text-2xl tracking-tight text-primary">{section.name}</h4>
 
       <div
         className={cn("grid gap-x-6 gap-y-2", className)}
@@ -480,13 +480,13 @@ export const Leafish = ({ columns, isFirstPage = false }: TemplateProps) => {
       {isFirstPage && <Header />}
 
       <div className="p-custom grid grid-cols-[6fr_4fr] items-start gap-x-4 space-x-6">
-        <div className="grid gap-y-4">
+        <div className="grid gap-y-5">
           {main.map((section) => (
             <Fragment key={section}>{mapSectionToComponent(section)}</Fragment>
           ))}
         </div>
 
-        <div className="grid gap-y-4">
+        <div className="grid gap-y-5">
           {sidebar.map((section) => (
             <Fragment key={section}>{mapSectionToComponent(section)}</Fragment>
           ))}
