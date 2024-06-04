@@ -157,6 +157,7 @@ type SectionProps<T> = {
   levelKey?: keyof T;
   summaryKey?: keyof T;
   keywordsKey?: keyof T;
+  containerClassname?: string;
 };
 
 const Section = <T,>({
@@ -166,11 +167,12 @@ const Section = <T,>({
   levelKey,
   summaryKey,
   keywordsKey,
+  containerClassname,
 }: SectionProps<T>) => {
   if (!section.visible || section.items.length === 0) return null;
 
   return (
-    <section id={section.id} className="grid">
+    <section id={section.id} className={cn("grid", containerClassname)}>
       <h4 className="mb-2 text-left text-2xl tracking-tight text-primary">{section.name}</h4>
 
       <div
@@ -349,7 +351,12 @@ const Languages = () => {
   const section = useArtboardStore((state) => state.resume.sections.languages);
 
   return (
-    <Section<Language> section={section} levelKey="level" className="gap-y-0">
+    <Section<Language>
+      section={section}
+      levelKey="level"
+      className="gap-y-0"
+      containerClassname="-mt-2"
+    >
       {(item) => (
         <div>
           {item.name} · {item.description}
@@ -421,16 +428,12 @@ const Custom = ({ id }: { id: string }) => {
       urlKey="url"
       summaryKey="summary"
       keywordsKey="keywords"
+      className="gap-y-0"
     >
       {(item) => (
-        <div>
-          <div>
-            <div className="font-bold">{item.name}</div>
-            <div>{item.description}</div>
-            <div>{item.location}</div>
-            <div className="font-bold">{item.date}</div>
-          </div>
-        </div>
+        <a href={item.url.href} target="_blank" rel="noreferrer noopener nofollow">
+          {item.name}
+        </a>
       )}
     </Section>
   );
