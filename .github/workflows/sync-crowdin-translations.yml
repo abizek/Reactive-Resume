@@ -7,6 +7,7 @@ on:
 
 jobs:
   sync:
+    if: github.repository == 'abizek/Reactive-Resume'
     runs-on: ubuntu-latest
 
     steps:
