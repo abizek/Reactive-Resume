@@ -23,11 +23,11 @@ export const Providers = () => {
       }
     };
 
-    const resumeData = window.localStorage.getItem("resume");
-    if (resumeData) {
-      setResume(JSON.parse(resumeData));
-      return;
-    }
+    // const resumeData = window.localStorage.getItem("resume");
+    // if (resumeData) {
+    //   setResume(JSON.parse(resumeData));
+    //   return;
+    // }
 
     window.addEventListener("message", handleMessage);
 

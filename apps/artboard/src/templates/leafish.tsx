@@ -32,10 +32,10 @@ const Header = () => {
 
   return (
     <div>
-      <div className="p-custom flex items-center space-x-8 pb-2">
+      <div className="p-custom flex items-center space-x-8 pb-2 pt-12">
         <div className="space-y-3">
           <div>
-            <div className="text-6xl font-bold tracking-tighter">{basics.name}</div>
+            <div className="text-7xl font-bold tracking-tighter">{basics.name}</div>
             <div className="text-xl font-medium text-primary">{basics.headline}</div>
           </div>
 
@@ -129,13 +129,14 @@ type LinkProps = {
   icon?: React.ReactNode;
   label?: string;
   className?: string;
+  rtl?: boolean;
 };
 
-const Link = ({ url, icon, label, className }: LinkProps) => {
+const Link = ({ url, icon, label, className, rtl = false }: LinkProps) => {
   if (!isUrl(url.href)) return null;
 
   return (
-    <div className="flex items-center gap-x-1.5">
+    <div className={cn("flex items-center gap-x-1.5", rtl && "justify-end")}>
       {icon ?? <i className="ph ph-bold ph-link text-primary" />}
       <a
         href={url.href}
@@ -153,6 +154,7 @@ type SectionProps<T> = {
   section: SectionWithItem<T> | CustomSectionGroup;
   children?: (item: T) => React.ReactNode;
   className?: string;
+  wrapperClassName?: string;
   urlKey?: keyof T;
   levelKey?: keyof T;
   summaryKey?: keyof T;
@@ -164,6 +166,7 @@ const Section = <T,>({
   section,
   children,
   className,
+  wrapperClassName,
   levelKey,
   summaryKey,
   keywordsKey,
@@ -173,10 +176,10 @@ const Section = <T,>({
 
   return (
     <section id={section.id} className={cn("grid", containerClassname)}>
-      <h4 className="mb-2 text-left text-2xl tracking-tight text-primary">{section.name}</h4>
+      <h4 className="mb-4 text-left text-2xl tracking-tight text-primary">{section.name}</h4>
 
       <div
-        className={cn("grid gap-x-6 gap-y-2", className)}
+        className={cn("grid gap-x-6 gap-y-2", wrapperClassName)}
         style={{ gridTemplateColumns: `repeat(${section.columns}, 1fr)` }}
       >
         {section.items
@@ -211,7 +214,13 @@ const Experience = () => {
   const section = useArtboardStore((state) => state.resume.sections.experience);
 
   return (
-    <Section<Experience> section={section} urlKey="url" summaryKey="summary">
+    <Section<Experience>
+      section={section}
+      urlKey="url"
+      summaryKey="summary"
+      wrapperClassName="gap-y-3"
+      className="space-y-3"
+    >
       {(item) => (
         <div>
           <div className="flex items-baseline justify-between">
@@ -244,11 +253,8 @@ const Education = () => {
       {(item) => (
         <div>
           <div>{item.studyType}</div>
-          <div className="flex justify-between">
-            <div className="font-bold">{item.institution}</div>
-            <div className="font-bold">{item.date}</div>
-          </div>
-          <Link url={item.url} icon="" />
+          <div className="font-bold">{item.institution}</div>
+          <Link rtl url={item.url} icon="" />
           <div>{item.area}</div>
           <div>{item.score}</div>
         </div>
@@ -354,7 +360,7 @@ const Languages = () => {
     <Section<Language>
       section={section}
       levelKey="level"
-      className="gap-y-0"
+      wrapperClassName="gap-y-0"
       containerClassname="-mt-2"
     >
       {(item) => (
@@ -375,25 +381,21 @@ const Projects = () => {
       {(item) => (
         <div>
           <div>
-            <div className="flex justify-between">
-              <div className="font-bold text-primary">{item.name}</div>
-              <div className="flex gap-4 pr-1">
-                <Link url={item.url} />
-                {item.url2 && (
-                  <Link
-                    url={item.url2}
-                    icon={
-                      <img
-                        className="ph"
-                        alt="View GitHub"
-                        width={fontSize}
-                        height={fontSize}
-                        src="https://cdn.simpleicons.org/GitHub"
-                      />
-                    }
+            <div className="flex items-baseline justify-end gap-2">
+              {item.url2 && (
+                <a href={item.url2.href} target="_blank" rel="noreferrer noopener nofollow">
+                  <img
+                    className="ph translate-y-1"
+                    alt="View GitHub"
+                    width={fontSize}
+                    height={fontSize}
+                    src="https://cdn.simpleicons.org/GitHub"
                   />
-                )}
-              </div>
+                </a>
+              )}
+              <a href={item.url.href} target="_blank" rel="noreferrer noopener nofollow">
+                {item.name}
+              </a>
             </div>
             <div>{item.description}</div>
             <div className="font-bold text-primary">{item.date}</div>
@@ -428,7 +430,6 @@ const Custom = ({ id }: { id: string }) => {
       urlKey="url"
       summaryKey="summary"
       keywordsKey="keywords"
-      className="gap-y-0"
     >
       {(item) => (
         <a href={item.url.href} target="_blank" rel="noreferrer noopener nofollow">
@@ -489,14 +490,14 @@ export const Leafish = ({ columns, isFirstPage = false }: TemplateProps) => {
     <div>
       {isFirstPage && <Header />}
 
-      <div className="p-custom grid grid-cols-[6fr_4fr] items-start gap-x-4 space-x-6">
+      <div className="p-custom grid grid-cols-[63fr_37fr] items-start gap-x-12 space-x-6 pt-8">
         <div className="grid gap-y-5">
           {main.map((section) => (
             <Fragment key={section}>{mapSectionToComponent(section)}</Fragment>
           ))}
         </div>
 
-        <div className="grid gap-y-5">
+        <div className="grid gap-y-8 text-right [&_h4]:text-right">
           {sidebar.map((section) => (
             <Fragment key={section}>{mapSectionToComponent(section)}</Fragment>
           ))}
